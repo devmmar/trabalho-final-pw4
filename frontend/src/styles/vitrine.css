@@ -1,0 +1,122 @@
+.hero-title {
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 400;
+}
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 2rem;
+}
+body {
+  margin: 0;
+  background: #faf9f6;
+  color: #242b26;
+  font-family: "Segoe UI", sans-serif;
+}
+button,
+a,
+input {
+  -webkit-tap-highlight-color: transparent;
+}
+.property-art {
+  height: 240px;
+  position: relative;
+  overflow: hidden;
+  background: #a5b7a6;
+  isolation: isolate;
+}
+.art-sun {
+  position: absolute;
+  width: 110px;
+  height: 110px;
+  border-radius: 100%;
+  background: #e4d8ad;
+  top: 22px;
+  right: 30px;
+}
+.art-ground {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 55px;
+  background: #577564;
+}
+.art-building {
+  position: absolute;
+  width: 65%;
+  height: 58%;
+  bottom: 40px;
+  left: 17%;
+  background: #e5dfcf;
+  box-shadow: 18px 14px 0 #708776;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  padding: 22px 24px 0;
+  transform: skewY(-3deg);
+}
+.art-building::before {
+  content: "";
+  position: absolute;
+  height: 18px;
+  background: #345846;
+  top: -18px;
+  left: -12px;
+  right: -12px;
+}
+.art-window {
+  background: #456758;
+  border: 5px solid #f4efdf;
+  min-height: 25px;
+}
+.art-door {
+  background: #ae855b;
+  width: 70%;
+  justify-self: center;
+}
+.apartment {
+  background: #afbfca;
+}
+.apartment .art-building {
+  height: 78%;
+  width: 48%;
+  left: 26%;
+  background: #d8d3c9;
+  box-shadow: 20px 12px 0 #748d9c;
+}
+.apartment .art-ground {
+  background: #69837e;
+}
+.apartment .art-window {
+  background: #657e88;
+}
+.hero-art .property-art {
+  height: 380px;
+  background: #8da58f;
+}
+.hero-art .art-building {
+  height: 53%;
+  width: 68%;
+  left: 13%;
+  bottom: 57px;
+  gap: 24px;
+  padding: 30px 30px 0;
+}
+.hero-art .art-sun {
+  width: 155px;
+  height: 155px;
+  right: 26px;
+  top: 30px;
+}
+.hero-art .art-ground {
+  height: 75px;
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+:root {
+  --primary: #234c3d;
+  --primary-foreground: #ffffff;
+  --ring: #52705b;
+}

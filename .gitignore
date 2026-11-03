@@ -1,0 +1,11 @@
+.env
+.tools/
+backups/
+backend/target/
+backend/uploads/
+backend/*.log
+node_modules/
+dist/
+.idea/
+.vscode/
+*.class

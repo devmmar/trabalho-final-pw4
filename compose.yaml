@@ -1,0 +1,95 @@
+name: trabalho-final-pw4
+
+services:
+  db:
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: projetoimobiliaria
+      MYSQL_USER: imobiliaria
+      MYSQL_PASSWORD: ${DB_PASSWORD:?Execute scripts/docker-start.ps1 primeiro}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:?Execute scripts/docker-start.ps1 primeiro}
+    ports:
+      - "127.0.0.1:${DB_PORT:-3307}:3306"
+    volumes:
+      - database:/var/lib/mysql
+      - ./backend/sql/01_schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      - ./backend/sql/dados-exemplo.sql:/docker-entrypoint-initdb.d/02-dados.sql:ro
+    healthcheck:
+      test: [CMD-SHELL, 'MYSQL_PWD="$$MYSQL_PASSWORD" mysql -h 127.0.0.1 -u "$$MYSQL_USER" -D projetoimobiliaria -e "SELECT COUNT(*) FROM imoveis" >/dev/null 2>&1']
+      interval: 5s
+      timeout: 5s
+      retries: 40
+      start_period: 30s
+
+  api:
+    build:
+      context: ./backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      mailpit:
+        condition: service_started
+    environment:
+      SERVER_ADDRESS: 0.0.0.0
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/projetoimobiliaria?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: imobiliaria
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET:?Execute scripts/docker-start.ps1 primeiro}
+      BOOTSTRAP_ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@localhost}
+      BOOTSTRAP_ADMIN_PASSWORD: ${ADMIN_PASSWORD:?Execute scripts/docker-start.ps1 primeiro}
+      APP_UPLOAD_DIR: /app/uploads
+      MAIL_HOST: mailpit
+      MAIL_FROM: imobiliaria@localhost
+      SPRING_MAIL_PORT: 1025
+      SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH: "false"
+      SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE: "false"
+    ports:
+      - "127.0.0.1:${API_PORT:-8081}:8080"
+    volumes:
+      - uploads:/app/uploads
+    healthcheck:
+      test: [CMD, curl, --fail, --silent, http://localhost:8080/bairros]
+      interval: 10s
+      timeout: 5s
+      retries: 18
+      start_period: 40s
+
+  frontend:
+    build:
+      context: ./frontend
+    restart: unless-stopped
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:${WEB_PORT:-3000}:80"
+    healthcheck:
+      test: [CMD, wget, -q, --spider, http://127.0.0.1/]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  phpmyadmin:
+    image: phpmyadmin:5.2-apache
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      UPLOAD_LIMIT: 64M
+    ports:
+      - "127.0.0.1:${PMA_PORT:-8090}:80"
+
+  mailpit:
+    image: axllent/mailpit:v1.27
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${MAIL_PORT:-8025}:8025"
+
+volumes:
+  database:
+  uploads:
