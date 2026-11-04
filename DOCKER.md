@@ -65,3 +65,16 @@ O SQL fica em `backups/`, ignorada pelo Git. Para restaurar um backup, use a aba
 - phpMyAdmin acompanha o banco; Mailpit captura os e-mails via SMTP interno na porta 1025.
 
 Docker Desktop precisa estar aberto. Nao e necessario iniciar Java, Maven, XAMPP ou banco do Windows para usar este ambiente.
+
+## Validacao do ambiente em 03/11/2026
+
+O Docker Desktop iniciou com WSL 2 apos reiniciar o Windows. As imagens de frontend e API foram compiladas dentro do Docker, e os cinco servicos ficaram ativos.
+
+- Frontend, proxy /api/imoveis, API /bairros, phpMyAdmin e Mailpit: HTTP 200.
+- GET /users sem token: HTTP 401.
+- Login do administrador e consulta autenticada de usuarios: HTTP 200.
+- Banco inicializado pelos SQLs: 2 bairros, 2 tipos de imovel, 2 imoveis e 1 administrador.
+- Envio de e-mail pela API: HTTP 200 e mensagem capturada somente no Mailpit local.
+- Script docker-backup.ps1 executado com sucesso; dump SQL salvo em backups/ (fora do Git).
+
+No uso diario, abra o Docker Desktop e execute ./scripts/docker-start.ps1 na raiz deste repositorio. Para verificar novamente os acessos, execute ./scripts/docker-check.ps1.

@@ -7,4 +7,4 @@
 - Frontend em frontend/, backend em backend/ e Docker Compose na raiz.
 - Consultar README.md e DOCKER.md antes de alterar caminhos ou comandos de execucao.
 - Manter .env, senhas, volumes, backups, node_modules e artefatos de build fora do Git.
-- Validar frontend com npm run build; testes do backend exigem banco ativo. A execucao inicial do Docker neste computador ainda depende da reinicializacao do Windows.
+- Validar frontend com npm run build; testes do backend exigem banco ativo.
