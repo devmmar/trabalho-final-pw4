@@ -1,14 +1,23 @@
+import { Logo } from "./Logo";
 export function SiteFooter() {
   return (
-    <footer className="border-t border-stone-200 px-6 py-7">
-      <div className="mx-auto flex max-w-6xl flex-wrap justify-between gap-3 text-xs text-stone-500">
-        <span className="font-semibold text-[#234c3d]">
-          morada.{" "}
-          <span className="ml-2 font-normal text-stone-500">
-            Espaços para novas histórias.
+    <footer className="mt-12 border-t">
+      <div className="mx-auto grid max-w-6xl gap-8 px-6 py-12 text-xs text-muted-foreground sm:grid-cols-3 md:px-12">
+        <div>
+          <span className="text-foreground">
+            <Logo />
           </span>
-        </span>
-        <span>Projeto acadêmico · PW IV · {new Date().getFullYear()}</span>
+          <p className="mt-4">Santa Maria, RS</p>
+        </div>
+        <address className="not-italic">
+          <p className="eyebrow mb-3">Contato</p>
+          <p>Rua do Acampamento, 100 · Centro</p>
+          <p className="mt-1">(55) 3000-0000</p>
+          <p className="mt-1">contato@ventana.test</p>
+        </address>
+        <p className="sm:text-right">
+          Ventana Imobiliária · {new Date().getFullYear()}
+        </p>
       </div>
     </footer>
   );

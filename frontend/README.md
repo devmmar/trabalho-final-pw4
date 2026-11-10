@@ -1,4 +1,4 @@
-# Front-end Morada
+# Front-end Ventana Imobiliaria
 
 React + Vite + TypeScript, Tailwind CSS e shadcn/ui.
 

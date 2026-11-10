@@ -1,41 +1,31 @@
-import { ArrowDown } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { PropertyArt } from "./PropertyArt";
 export function VitrineHero() {
   return (
-    <section className="mx-auto grid max-w-7xl gap-10 px-6 py-12 md:grid-cols-[1.1fr_1fr] md:items-center md:px-12 md:py-20">
+    <section className="mx-auto grid max-w-6xl gap-12 px-6 pb-20 pt-12 md:grid-cols-[1fr_1.1fr] md:items-center md:px-12 md:pb-28 md:pt-20">
       <div>
-        <p className="mb-5 flex items-center gap-2 text-xs font-semibold uppercase tracking-[.2em] text-[#52705b]">
-          <span className="h-px w-7 bg-[#52705b]" />
-          Seu próximo capítulo começa aqui
-        </p>
-        <h1 className="hero-title max-w-xl text-5xl leading-[1.08] tracking-tight md:text-6xl">
-          Um lugar para
+        <p className="eyebrow mb-8">Imobiliária · Santa Maria</p>
+        <h1 className="display text-5xl md:text-7xl">
+          Espaços com
           <br />
-          chamar de <em className="text-[#52705b]">seu.</em>
+          boa luz.
         </h1>
-        <p className="mt-6 max-w-sm text-base leading-7 text-stone-500">
-          Encontre o espaço que combina com a sua vida. Explore imóveis em Santa
-          Maria e descubra novas possibilidades.
+        <p className="mt-8 max-w-sm text-base leading-7 text-muted-foreground">
+          Casas e apartamentos para comprar ou alugar, escolhidos com cuidado.
         </p>
-        <Button
-          render={<a href="#imoveis" />}
-          nativeButton={false}
-          className="mt-8 rounded-full px-6"
+        <a
+          href="#imoveis"
+          className="link-line mt-10 inline-block pb-1 text-sm"
         >
-          Encontre sua morada <ArrowDown size={15} />
-        </Button>
+          Ver imóveis ↓
+        </a>
       </div>
-      <div className="hero-art relative overflow-hidden rounded-t-[120px] rounded-b-3xl">
-        <PropertyArt />
-        <div className="absolute bottom-8 right-6 rounded-xl bg-[#faf9f6] p-4 shadow-lg">
-          <p className="text-xs text-stone-500">Novos espaços.</p>
-          <p className="hero-title text-2xl">Novas histórias.</p>
-        </div>
-        <span className="absolute right-5 top-5 rounded-full border border-white/40 bg-white/20 px-3 py-1 text-xs text-white backdrop-blur">
-          Santa Maria, RS
-        </span>
-      </div>
+      <figure>
+        <PropertyArt variant="sobrado" />
+        <figcaption className="mt-3 flex justify-between text-[11px] text-muted-foreground">
+          <span>Santa Maria, RS</span>
+          <span>Ilustração</span>
+        </figcaption>
+      </figure>
     </section>
   );
 }

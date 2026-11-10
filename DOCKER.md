@@ -42,9 +42,25 @@ O banco e os uploads usam volumes persistentes. Parar containers ou reiniciar o 
 
 **Nao execute `docker compose down -v` para parar o projeto: isso apaga os volumes de banco e uploads.**
 
+## Contrato da API (Aula 2)
+
+```powershell
+./scripts/api-contrato.ps1
+```
+
+Executa os 9 testes da tabela da Aula 2 (vitrine publica, login, claims do token, 401 sem token, 201 do admin, cadastro de cliente, 403 do cliente e 401 com token adulterado). O token e decodificado localmente, sem enviar para sites externos. Na primeira execucao, o cliente de teste fica salvo em CLIENT_EMAIL e CLIENT_PASSWORD no `.env`; nas seguintes, um cliente temporario e criado e removido.
+
+O login responde `token`, `tipo`, `type` e `expiresIn`. O token traz `sub`, `email`, `tipo` (e `role`) e `exp`. Os perfis da API sao ADMIN e COMUM: o front-end leva ADMIN para /painel e COMUM para /cliente.
+
 ## Banco e dados
 
 Na primeira inicializacao de um volume vazio, MySQL importa `backend/sql/01_schema.sql` e `dados-exemplo.sql`. O administrador e criado pela API. Novas inicializacoes preservam os dados; os SQLs nao sao reimportados em volumes existentes.
+
+`dados-exemplo.sql` pode ser executado de novo sem duplicar registros. Para aplicar exemplos novos num volume existente:
+
+```powershell
+docker compose exec db sh -c 'MYSQL_PWD="$MYSQL_ROOT_PASSWORD" mysql --default-character-set=utf8mb4 -uroot < /docker-entrypoint-initdb.d/02-dados.sql'
+```
 
 A instancia Docker inicia com os exemplos do repositorio. Para migrar dados de outro ambiente, use um backup SQL; o material das aulas permanece separado.
 

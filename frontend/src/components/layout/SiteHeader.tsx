@@ -1,25 +1,55 @@
-import { ArrowRight, House } from "lucide-react";
+import { NavLink } from "react-router";
+import { useAuth } from "@/features/auth/AuthContext";
+import { nomePerfil } from "@/features/auth/session";
+import { Logo } from "./Logo";
+
+const link = ({ isActive }: { isActive: boolean }) =>
+  `link-line pb-1 ${isActive ? "ativo" : ""}`;
+
 export function SiteHeader() {
+  const { sessao, sair } = useAuth();
   return (
-    <header className="border-b border-stone-200 bg-[#faf9f6]">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 md:px-12">
-        <a
-          href="#"
-          className="flex items-center gap-2.5 font-semibold tracking-tight"
-        >
-          <span className="flex size-9 items-center justify-center rounded-full bg-[#234c3d] text-white">
-            <House size={19} />
-          </span>
-          <span className="text-xl">
-            morada<span className="text-[#65816a]">.</span>
-          </span>
-        </a>
-        <a
-          href="#imoveis"
-          className="text-sm text-stone-600 hover:text-stone-950"
-        >
-          Explorar imóveis <ArrowRight className="ml-2 inline" size={15} />
-        </a>
+    <header>
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-6 py-8 md:px-12">
+        <NavLink to="/" aria-label="Ventana Imobiliária, página inicial">
+          <Logo />
+        </NavLink>
+        <nav aria-label="Principal" className="flex items-center gap-5 text-sm md:gap-7">
+          <NavLink to="/" end className={link}>
+            Imóveis
+          </NavLink>
+          {sessao?.perfil === "CLIENTE" && (
+            <NavLink to="/cliente" className={link}>
+              Minha área
+            </NavLink>
+          )}
+          {sessao?.perfil === "ADMIN" && (
+            <NavLink to="/painel" className={link}>
+              Painel
+            </NavLink>
+          )}
+          {sessao ? (
+            <>
+              <span
+                className="hidden text-xs text-muted-foreground lg:inline"
+                title={sessao.email}
+              >
+                {nomePerfil(sessao)} · {sessao.email}
+              </span>
+              <button
+                type="button"
+                onClick={() => sair()}
+                className="link-line pb-1 text-muted-foreground hover:text-foreground"
+              >
+                Sair
+              </button>
+            </>
+          ) : (
+            <NavLink to="/login" className={link}>
+              Entrar
+            </NavLink>
+          )}
+        </nav>
       </div>
     </header>
   );

@@ -1,76 +1,52 @@
-import { ArrowRight, Bath, BedDouble, MapPin, Maximize } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Link } from "react-router";
+import { BotaoFavorito } from "@/features/cliente/BotaoFavorito";
 import { moeda } from "@/lib/format";
-import { getPreco } from "../utils";
+import { getPreco, localizacao } from "../utils";
 import type { Imovel, FinalidadeFiltro } from "../types";
-import { PropertyArt } from "./PropertyArt";
+import { PropertyArt, artVariant } from "./PropertyArt";
 interface Props {
   imovel: Imovel;
-  mode: FinalidadeFiltro;
-  onSelect: (imovel: Imovel) => void;
+  mode?: FinalidadeFiltro;
 }
-export function ImovelCard({ imovel: i, mode, onSelect }: Props) {
+export function ImovelCard({ imovel: i, mode = "todos" }: Props) {
+  const aluguel = mode === "alugar" || !i.precoVenda;
+  const preco = getPreco(i, mode);
   return (
-    <Card className="gap-0 overflow-hidden rounded-2xl border-stone-200 py-0 shadow-none">
-      <div className="relative">
-        <PropertyArt
-          apartment={i.tipoImovel?.nome.toLowerCase().includes("apartamento")}
-        />
-        <Badge className="absolute left-4 top-4 bg-white text-[#234c3d]">
-          {mode === "alugar" || !i.precoVenda ? "Aluguel" : "Venda"}
-        </Badge>
-        <span className="absolute right-4 top-4 text-xs text-white">
-          #{String(i.id).padStart(3, "0")}
-        </span>
-      </div>
-      <CardContent className="p-5">
-        <p className="mb-2 text-[11px] font-medium uppercase tracking-wider text-[#52705b]">
-          {i.tipoImovel?.nome ?? "Imóvel"}
-        </p>
-        <h3 className="text-lg font-medium leading-snug">{i.titulo}</h3>
-        <p className="mt-2 flex items-center gap-1.5 text-xs text-stone-500">
-          <MapPin size={13} />
-          {[i.bairro?.nome, i.bairro?.cidade].filter(Boolean).join(", ") ||
-            "Localização não informada"}
-        </p>
-        <div className="my-5 flex gap-4 text-xs text-stone-500">
-          <span className="flex items-center gap-1.5">
-            <BedDouble size={15} />
-            {i.dormitorios ?? "—"} quartos
-          </span>
-          <span className="flex items-center gap-1.5">
-            <Bath size={15} />
-            {i.banheiros ?? "—"}
-          </span>
-          <span className="flex items-center gap-1.5">
-            <Maximize size={14} />
-            {i.areaTotal ?? "—"} m²
-          </span>
+    <article className="relative">
+      <Link
+        to={`/imoveis/${i.id}`}
+        className="group block outline-none"
+        aria-label={`Ver detalhes de ${i.titulo}`}
+      >
+        <div className="overflow-hidden transition-opacity group-hover:opacity-80 group-focus-visible:ring-2 group-focus-visible:ring-ring group-focus-visible:ring-offset-2">
+          <PropertyArt variant={artVariant(i)} />
         </div>
-        <div className="flex items-center justify-between border-t border-stone-100 pt-4">
-          <p className="text-xl font-semibold tracking-tight">
-            {getPreco(i, mode) != null
-              ? moeda(getPreco(i, mode)!)
-              : "Sob consulta"}
-            {(mode === "alugar" || !i.precoVenda) && (
-              <span className="ml-1 text-xs font-normal text-stone-500">
-                /mês
-              </span>
-            )}
+        <div className="mt-5 flex items-baseline justify-between gap-4">
+          <p className="eyebrow">
+            {i.tipoImovel?.nome ?? "Imóvel"} · {aluguel ? "Aluguel" : "Venda"}
           </p>
-          <Button
-            variant="outline"
-            size="icon"
-            className="rounded-full"
-            aria-label={`Ver detalhes de ${i.titulo}`}
-            onClick={() => onSelect(i)}
-          >
-            <ArrowRight size={16} />
-          </Button>
+          <span className="text-[11px] text-muted-foreground">
+            {String(i.id).padStart(3, "0")}
+          </span>
         </div>
-      </CardContent>
-    </Card>
+        <h3 className="mt-3 text-lg font-normal leading-snug">{i.titulo}</h3>
+        <p className="mt-1 text-sm text-muted-foreground">{localizacao(i)}</p>
+        <p className="mt-4 text-xs text-muted-foreground">
+          {i.dormitorios ?? "—"} quartos · {i.banheiros ?? "—"} banh. ·{" "}
+          {i.areaTotal ?? "—"} m²
+        </p>
+        <p className="mt-4 border-t pt-4 text-base font-normal">
+          {preco != null ? moeda(preco) : "Sob consulta"}
+          {aluguel && preco != null && (
+            <span className="ml-1 text-xs text-muted-foreground">/mês</span>
+          )}
+        </p>
+      </Link>
+      <BotaoFavorito
+        id={i.id}
+        titulo={i.titulo}
+        className="absolute right-3 top-3"
+      />
+    </article>
   );
 }

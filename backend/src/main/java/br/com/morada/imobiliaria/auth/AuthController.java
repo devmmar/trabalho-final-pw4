@@ -57,6 +57,7 @@ public class AuthController {
         }
 
         String token = tokens.create(user);
-        return ResponseEntity.ok(Map.of("token", token, "type", "Bearer", "expiresIn", 3600));
+        return ResponseEntity.ok(Map.of("token", token, "type", "Bearer", "expiresIn", 3600,
+                "tipo", user.getTipo().name()));
     }
 }
